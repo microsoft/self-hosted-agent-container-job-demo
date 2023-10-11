@@ -11,6 +11,8 @@ $ENVIRONMENT="aca-env-jobs-sample"
 $JOB_NAME="azure-pipelines-agent-job"
 $PLACEHOLDER_JOB_NAME="placeholder-agent-job"
 $VNET_NAME="aca-jobs-sample-vnet"
+$ADDRESS_PREFIX_VNET='20.0.0.0/16'
+$ADDRESS_PREFIX_SUBNET='20.0.0.0/23'
 
 # create container app environment
 az group create `
@@ -21,13 +23,13 @@ az network vnet create `
     --resource-group $RESOURCE_GROUP `
     --name $VNET_NAME `
     --location $LOCATION `
-    --address-prefix 20.0.0.0/16
+    --address-prefix $ADDRESS_PREFIX_VNET
 
 az network vnet subnet create `
     --resource-group $RESOURCE_GROUP `
     --vnet-name $VNET_NAME `
     --name infrastructure-subnet `
-    --address-prefixes 20.0.0.0/23 
+    --address-prefixes $ADDRESS_PREFIX_SUBNET
 
 # Get subnet resource id
 $INFRASTRUCTURE_SUBNET=az network vnet subnet show --resource-group ${RESOURCE_GROUP} --vnet-name $VNET_NAME --name infrastructure-subnet --query "id" -o tsv
@@ -41,8 +43,8 @@ az containerapp env create `
    --location $LOCATION
 
 $AZP_TOKEN=az keyvault secret show --name container-apps-self-hosted-agent --vault-name platform-management --query "value" --out tsv
-$ORGANIZATION_URL="https://dev.azure.com/SwissCSURockStars"
-$AZP_POOL="container-apps"
+$ORGANIZATION_URL="https://dev.azure.com/<Target ADO Organization>" # SwissCSURockStars
+$AZP_POOL="<ADO agent pool name>" #container-apps
 
 
 # Build the Azure Pipelines agent container image
@@ -63,7 +65,7 @@ az acr build `
   --registry "$CONTAINER_REGISTRY_NAME" `
   --image "$CONTAINER_IMAGE_NAME" `
   --file "Dockerfile.azure-pipelines" `
-  "https://github.com/zojovano-demos/container-apps-ci-cd-runner-tutorial.git"
+  "https://github.com/Azure-Samples/container-apps-ci-cd-runner-tutorial.git" # https://github.com/zojovano-demos/container-apps-ci-cd-runner-tutorial.git
   
 
 # Create a placeholder self-hosted agent
