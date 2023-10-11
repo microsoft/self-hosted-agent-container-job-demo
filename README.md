@@ -1,33 +1,34 @@
-# Project
+# Sample - ADO Self-hosted agent as a Container App job
 
-> This repo has been populated by an initial template to help get you started. Please
-> make sure to update the content to build a great experience for community-building.
+Demo of ADO pipeline self-hosted agent running as Azure Container Apps - Job
 
-As the maintainer of this project, please make a few updates:
+## Overview
 
-- Improving this README.MD file to provide a great experience
-- Updating SUPPORT.MD with content about this project's support experience
-- Understanding the security reporting process in SECURITY.MD
-- Remove this section from the README
+ADO self-hosted agent running as a Container Apps Job. Container Apps is integrated with a VNET with App Service Private Endpoint(s). Public Access for the App Service is disabled and deployments to App Service can be done only through the Private Endpoint(s).
 
-## Contributing
+![Alt text](Resources/../assets/Picture01.jpg)
 
-This project welcomes contributions and suggestions.  Most contributions require you to agree to a
-Contributor License Agreement (CLA) declaring that you have the right to, and actually do, grant us
-the rights to use your contribution. For details, visit https://cla.opensource.microsoft.com.
+ADO self-hosted agent agent pool jobs:
+![Alt text](Resources/../assets/adoselfhostedjob.png)
 
-When you submit a pull request, a CLA bot will automatically determine whether you need to provide
-a CLA and decorate the PR appropriately (e.g., status check, comment). Simply follow the instructions
-provided by the bot. You will only need to do this once across all repos using our CLA.
+Container Apps Job execution history.
+![Alt text](Resources/../assets/containerappjob.png)
 
-This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/).
-For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or
-contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
+## How to deploy the sample
 
-## Trademarks
+### Pre-requisites
 
-This project may contain trademarks or logos for projects, products, or services. Authorized use of Microsoft 
-trademarks or logos is subject to and must follow 
-[Microsoft's Trademark & Brand Guidelines](https://www.microsoft.com/en-us/legal/intellectualproperty/trademarks/usage/general).
-Use of Microsoft trademarks or logos in modified versions of this project must not cause confusion or imply Microsoft sponsorship.
-Any use of third-party trademarks or logos are subject to those third-party's policies.
+- Owner of Azure Subscription
+
+### Deployment
+
+- Run createcontainerapp.ps1 to:
+   - Create Container App Job
+   - Build self-hosted agent container image
+   - Create VNET
+   - Create App Service with Private Endpoints to previously created VNET
+
+## References
+
+- https://learn.microsoft.com/en-us/azure/container-apps/tutorial-ci-cd-runners-jobs?pivots=container-apps-jobs-self-hosted-ci-cd-azure-pipelines&tabs=powershell
+- https://learn.microsoft.com/en-us/azure/container-apps/vnet-custom-internal?tabs=bash%2Cazure-cli&pivots=azure-cli

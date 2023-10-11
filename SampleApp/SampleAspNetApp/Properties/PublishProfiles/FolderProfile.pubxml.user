@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+https://go.microsoft.com/fwlink/?LinkID=208121.
+-->
+<Project>
+  <PropertyGroup>
+    <_PublishTargetUrl>C:\Users\zojovano\source\zojovano-articles\demo-container-app-job-self-hosted-agent\SampleApp\SampleAspNetApp\bin\Release\net7.0\publish\</_PublishTargetUrl>
+    <History>True|2023-09-19T15:45:58.7928469Z;</History>
+    <LastFailureDetails />
+  </PropertyGroup>
+</Project>

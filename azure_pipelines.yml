@@ -1,0 +1,70 @@
+trigger:
+- master
+
+pool:
+  name: container-apps
+
+steps:
+- script: echo Hello, world!
+  displayName: 'Run a one-line script'
+
+
+- task: DotNetCoreCLI@2
+  inputs:
+    command: 'restore'
+    projects: '**/*.sln'
+    feedsToUse: 'select'
+
+- task: DotNetCoreCLI@2
+  inputs:
+    command: 'build'
+    projects: '**/*.sln'
+
+- task: DotNetCoreCLI@2
+  inputs:
+    command: 'publish'
+    publishWebProjects: true
+    arguments: '-o $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+
+
+- task: PublishBuildArtifacts@1
+  inputs:
+        PathtoPublish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
+        ArtifactName: 'drop'
+        publishLocation: 'Container'
+
+
+- task: AzureAppServiceManage@0
+  inputs:
+    azureSubscription: 'platform-management(90f5fdbd-fc04-461d-9c7b-df603d2efd6d)'
+    Action: 'Restart Azure App Service'
+    WebAppName: 'aca-jobs-sample'
+
+- task: DownloadBuildArtifacts@1
+  inputs:
+    buildType: 'current'
+    downloadType: 'single'
+    artifactName: 'drop'
+    downloadPath: '$(System.ArtifactsDirectory)'
+
+- task: Bash@3
+  inputs:
+    targetType: 'inline'
+    script: |
+      # Write your commands here
+      ls -l
+      cd $(System.ArtifactsDirectory)
+      ls -l
+      cp $(System.ArtifactsDirectory)/$(Build.BuildId).zip $(System.ArtifactsDirectory)/test.zip
+      ls -l
+      cd drop
+      ls -l
+
+
+- task: AzureWebApp@1
+  inputs:
+    azureSubscription: 'platform-management(90f5fdbd-fc04-461d-9c7b-df603d2efd6d)'
+    appType: 'webApp'
+    appName: 'aca-jobs-sample'
+    package: '$(System.ArtifactsDirectory)/drop/SampleAspNetApp.zip'
+    deploymentMethod: 'auto'
