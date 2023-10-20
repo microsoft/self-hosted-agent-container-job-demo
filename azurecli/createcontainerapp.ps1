@@ -43,8 +43,8 @@ az containerapp env create `
    --location $LOCATION
 
 $AZP_TOKEN=az keyvault secret show --name container-apps-self-hosted-agent --vault-name platform-management --query "value" --out tsv
-$ORGANIZATION_URL="https://dev.azure.com/<Target ADO Organization>" # SwissCSURockStars
-$AZP_POOL="<ADO agent pool name>" #container-apps
+$ORGANIZATION_URL="https://dev.azure.com/<ADO organization name>" # !!! Please replace this value with your own organization name !!!
+$AZP_POOL="container-apps" # !!! Please replace this with your own pool name !!!
 
 
 # Build the Azure Pipelines agent container image
@@ -65,11 +65,14 @@ az acr build `
   --registry "$CONTAINER_REGISTRY_NAME" `
   --image "$CONTAINER_IMAGE_NAME" `
   --file "Dockerfile.azure-pipelines" `
-  "https://github.com/Azure-Samples/container-apps-ci-cd-runner-tutorial.git" # https://github.com/zojovano-demos/container-apps-ci-cd-runner-tutorial.git
+  "https://github.com/Azure-Samples/container-apps-ci-cd-runner-tutorial.git" #  !!! Please replace this with your own repository if you would like to customize the docker container !!!
   
 
 # Create a placeholder self-hosted agent
-az containerapp job create -n "$PLACEHOLDER_JOB_NAME" -g "$RESOURCE_GROUP" --environment "$ENVIRONMENT" `
+az containerapp job create `
+  -n "$PLACEHOLDER_JOB_NAME" `
+  -g "$RESOURCE_GROUP" `
+  --environment "$ENVIRONMENT" `
   --trigger-type Manual `
   --replica-timeout 300 `
   --replica-retry-limit 1 `
@@ -93,7 +96,10 @@ az containerapp job execution list `
 az containerapp job delete -n "$PLACEHOLDER_JOB_NAME" -g "$RESOURCE_GROUP"  
 
 # Create a self-hosted agent as an event-driven job
-az containerapp job create -n "$JOB_NAME" -g "$RESOURCE_GROUP" --environment "$ENVIRONMENT" `
+az containerapp job create `
+  -n "$JOB_NAME" `
+  -g "$RESOURCE_GROUP" `
+  --environment "$ENVIRONMENT" `
   --trigger-type Event `
   --replica-timeout 1800 `
   --replica-retry-limit 1 `

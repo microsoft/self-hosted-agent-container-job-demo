@@ -32,6 +32,9 @@ Besides the deployment of Container Apps Environment and Container App Job, this
 - Follow steps in [tutorial](https://learn.microsoft.com/en-us/azure/container-apps/tutorial-ci-cd-runners-jobs?pivots=container-apps-jobs-self-hosted-ci-cd-azure-pipelines&tabs=powershell#get-an-azure-devops-personal-access-token) to create personal access token for target ADO organization and add the token as a secret to a Azure KeyVault. The sample code retrieves the token from the KeyVault when creating the Container Apps Job. 
 ![Alt text](Resources/../assets/keyvault.png)
 
+> [!CAUTION]
+> Personal Access Token generated in the Azure DevOps used for the self-hosted job and scale controller are continuously used and not just during the registration. Pay attention to the token expiration.
+
 - (Optional) If you would like to customize self-hosted agent container, you would need to git clone sample repository https://github.com/Azure-Samples/container-apps-ci-cd-runner-tutorial.git used in this sample and create your own repository so that you can modify Docker build file. 
 Replace ACR Build parameter with your own git repository:
 
